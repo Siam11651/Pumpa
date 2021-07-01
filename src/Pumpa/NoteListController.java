@@ -13,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -346,5 +345,8 @@ public class NoteListController implements Initializable
                 fx_new_note_name.setText(t1.substring(0, NEW_NOTE_NAME_MAX_CHAR));
             }
         });
+
+        fx_new_note_name.setTooltip(new Tooltip("Set new note name"));
+        fx_add_button.setTooltip(new Tooltip("Add new note"));
     }
 }

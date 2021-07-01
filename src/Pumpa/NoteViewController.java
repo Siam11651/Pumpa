@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -28,7 +29,7 @@ public class NoteViewController implements Initializable
     TextArea fx_text_area_note;
 
     @FXML
-    Button fx_button_save_note;
+    Button fx_button_save_note, fx_button_back;
 
     public boolean GetSaved()
     {
@@ -181,5 +182,8 @@ public class NoteViewController implements Initializable
                 fx_button_save_note.setVisible(true);
             }
         });
+
+        fx_button_back.setTooltip(new Tooltip("Back"));
+        fx_button_save_note.setTooltip(new Tooltip("Save"));
     }
 }
