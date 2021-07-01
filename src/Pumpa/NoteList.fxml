@@ -2,14 +2,29 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pumpa.NoteListController">
    <children>
       <HBox spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="fx_new_note_name" promptText="New Note Name..." />
-            <Button fx:id="fx_add_button" mnemonicParsing="false" onAction="#Action_add" text="Add" />
+            <TextField fx:id="fx_new_note_name" onAction="#Action_add" promptText="New Note Name..." />
+            <Button fx:id="fx_add_button" mnemonicParsing="false" onAction="#Action_add">
+               <font>
+                  <Font />
+               </font>
+               <graphic>
+                  <ImageView fx:id="fx_image_view_add" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/icons/add_24x24.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding></Button>
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

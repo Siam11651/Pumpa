@@ -19,7 +19,7 @@ public class NoteViewController implements Initializable
     boolean saved;
 
     @FXML
-    ImageView fx_image_view_save;
+    ImageView fx_image_view_back, fx_image_view_save;
 
     @FXML
     Label fx_label_current_note;
@@ -44,7 +44,7 @@ public class NoteViewController implements Initializable
     {
         saved = true;
 
-        fx_image_view_save.setVisible(false);
+        fx_button_save_note.setVisible(false);
 
         FileOutputStream noteOutputStream = null;
 
@@ -115,7 +115,7 @@ public class NoteViewController implements Initializable
 
         saved = true;
 
-        fx_image_view_save.setVisible(false);
+        fx_button_save_note.setVisible(false);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class NoteViewController implements Initializable
 
         try
         {
-            imageInputStream = new FileInputStream("resources/icons/save_24x24.png");
+            imageInputStream = new FileInputStream("resources/icons/save_16x16.png");
         }
         catch(FileNotFoundException e)
         {
@@ -147,6 +147,30 @@ public class NoteViewController implements Initializable
             }
         }
 
+        try
+        {
+            imageInputStream = new FileInputStream("resources/icons/back_24x24.png");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(imageInputStream != null)
+        {
+            Image imageFile = new Image(imageInputStream);
+            fx_image_view_back.setImage(imageFile);
+
+            try
+            {
+                imageInputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         fx_text_area_note.textProperty().addListener((ObservableValue<? extends String> observableValue,
                                                       String oldValue, String newValue) ->
         {
@@ -154,7 +178,7 @@ public class NoteViewController implements Initializable
             {
                 saved = false;
 
-                fx_image_view_save.setVisible(true);
+                fx_button_save_note.setVisible(true);
             }
         });
     }

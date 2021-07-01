@@ -6,12 +6,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +28,10 @@ import java.util.Scanner;
 public class NoteListController implements Initializable
 {
     final int NEW_NOTE_NAME_MAX_CHAR = 30;
+    Image icon;
+
+    @FXML
+    ImageView fx_image_view_add;
 
     @FXML
     private TextField fx_new_note_name;
@@ -170,6 +179,7 @@ public class NoteListController implements Initializable
 
                         textInputDialog.setTitle("Rename Note");
                         textInputDialog.setHeaderText("Set new name of note");
+                        ((Stage)textInputDialog.getDialogPane().getScene().getWindow()).getIcons().add(icon);
 
                         Optional<String> result = textInputDialog.showAndWait();
 
@@ -185,7 +195,18 @@ public class NoteListController implements Initializable
 
             menuItemDelete.setOnAction((ActionEvent actionEvent)->
             {
-                DeleteNote((HBox)mouseEvent.getSource());
+                Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.YES, ButtonType.NO);
+
+                alert.setTitle("Delete Note");
+                alert.setHeaderText("Are you sure you want to delete the note?");
+                ((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(icon);
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if(result.isPresent() && result.get() == ButtonType.YES)
+                {
+                    DeleteNote((HBox)mouseEvent.getSource());
+                }
             });
 
             contextMenu.getItems().addAll(menuItemOpen, menuItemRename, menuItemDelete);
@@ -238,6 +259,55 @@ public class NoteListController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        FileInputStream imageInputStream = null;
+
+        try
+        {
+            imageInputStream = new FileInputStream("resources/icons/pumpa_48x48.png");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(imageInputStream != null)
+        {
+            icon = new Image(imageInputStream);
+
+            try
+            {
+                imageInputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        try
+        {
+            imageInputStream = new FileInputStream("resources/icons/add_16x16.png");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(imageInputStream != null)
+        {
+            Image imageFile = new Image(imageInputStream);
+            fx_image_view_add.setImage(imageFile);
+
+            try
+            {
+                imageInputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         Main.fileNames = new ArrayList<>();
         File filesList = new File("data/files.list");
         Scanner filesListScanner = null;

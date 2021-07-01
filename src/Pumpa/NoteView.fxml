@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -9,18 +10,51 @@
    <children>
       <HBox alignment="CENTER_LEFT" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
+            <Button fx:id="fx_button_back" mnemonicParsing="false" onAction="#Action_back">
+               <font>
+                  <Font />
+               </font>
+               <graphic>
+                  <ImageView fx:id="fx_image_view_back" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../../resources/icons/back_24x24.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="-0.5" left="-0.5" right="-0.5" top="-0.5" />
+               </padding></Button>
             <Label fx:id="fx_label_current_note" text="Template Title">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ImageView fx:id="fx_image_view_save" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@../../resources/icons/save.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="fx_button_save_note" mnemonicParsing="false" onAction="#Action_save_note" text="Save" />
-            <Button fx:id="fx_button_back" mnemonicParsing="false" onAction="#Action_back" text="Back" />
+            <Button fx:id="fx_button_save_note" mnemonicParsing="false" onAction="#Action_save_note">
+               <graphic>
+                  <ImageView fx:id="fx_image_view_save" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/icons/save_24x24.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding></Button>
          </children>
       </HBox>
       <TextArea fx:id="fx_text_area_note" promptText="Take your note..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
