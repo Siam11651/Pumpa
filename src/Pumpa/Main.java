@@ -27,6 +27,14 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        File filesList = new File("data/files.list");
+
+        if(!filesList.exists())
+        {
+            filesList.getParentFile().mkdirs();
+            filesList.createNewFile();
+        }
+
         rootName = RootName.NOTE_LIST;
         master = primaryStage;
         noteViewFXML = new FXMLLoader(Objects.requireNonNull(getClass().getResource("NoteView.fxml")));
@@ -48,7 +56,8 @@ public class Main extends Application
         {
             if(rootName == RootName.NOTE_VIEW && !((NoteViewController)noteViewFXML.getController()).GetSaved())
             {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "",
+                        ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 
                 alert.setTitle("Unsaved note");
                 alert.setHeaderText("Do you want to save before closing?");
@@ -62,7 +71,7 @@ public class Main extends Application
 
                         try
                         {
-                            noteOutputStream = new FileOutputStream("resources/notes/" + Main.currentNote + ".pp");
+                            noteOutputStream = new FileOutputStream("data/notes/" + Main.currentNote + ".pp");
                         }
                         catch(FileNotFoundException e)
                         {
@@ -93,7 +102,7 @@ public class Main extends Application
 
             try
             {
-                FileWriter fileListWriter = new FileWriter("resources/files.list");
+                FileWriter fileListWriter = new FileWriter("data/files.list");
 
                 for(int i = 0; i < fileNames.size(); i++)
                 {

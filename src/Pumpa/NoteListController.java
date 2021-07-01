@@ -4,17 +4,19 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -29,7 +31,7 @@ public class NoteListController implements Initializable
     private Button fx_add_button;
 
     @FXML
-    private VBox fx_note_list;
+    ListView<HBox> fx_list_view_note;
 
     @FXML
     void Action_add(ActionEvent event)
@@ -55,29 +57,166 @@ public class NoteListController implements Initializable
         }
     }
 
-    void NoteButtonActionHandler(ActionEvent event)
+    void OpenNote(HBox item)
     {
         Main.rootName = RootName.NOTE_VIEW;
-        Main.currentNote = ((Button)event.getSource()).getText();
+
+        for(int i = 0; i < item.getChildren().size(); i++)
+        {
+            if(item.getChildren().get(i) instanceof Label)
+            {
+                Main.currentNote = ((Label)item.getChildren().get(i)).getText();
+
+                break;
+            }
+        }
 
         ((NoteViewController)Main.noteViewFXML.getController()).Init();
         Main.master.getScene().setRoot(Main.noteView);
     }
 
+    void Rename(String oldName, String newName)
+    {
+        if(!newName.equals(oldName))
+        {
+            if(!Main.fileNames.contains(newName))
+            {
+                File oldNoteFile = new File("data/notes/" + oldName + ".pp");
+                File newNoteFile = new File("data/notes/" + newName + ".pp");
+
+                oldNoteFile.renameTo(newNoteFile);
+
+                for(int i = 0; i < Main.fileNames.size(); i++)
+                {
+                    if(Main.fileNames.get(i).equals(oldName))
+                    {
+                        Main.fileNames.remove(i);
+                        Main.fileNames.add(i, newName);
+
+                        break;
+                    }
+                }
+
+                RefreshList();
+            }
+            else
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+
+                alert.setTitle("Note already exists");
+                alert.setHeaderText("Set a new name which does not exist");
+                alert.show();
+            }
+        }
+    }
+
+    void DeleteNote(HBox item)
+    {
+        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        {
+            if(item == fx_list_view_note.getItems().get(i))
+            {
+                String noteName = "";
+
+                for(int j = 0; j < item.getChildren().size(); )
+                {
+                    if(item.getChildren().get(j) instanceof Label)
+                    {
+                        noteName = ((Label) item.getChildren().get(j)).getText();
+
+                        break;
+                    }
+                }
+
+                File noteFile = new File("data/notes/" + noteName + ".pp");
+
+                noteFile.delete();
+                fx_list_view_note.getItems().remove(i, i + 1);
+
+                break;
+            }
+        }
+    }
+
+    void NoteListItemActionHandler(MouseEvent mouseEvent)
+    {
+        if(mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() >= 2)
+        {
+            OpenNote((HBox)mouseEvent.getSource());
+        }
+        else if(mouseEvent.getButton() == MouseButton.SECONDARY)
+        {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem menuItemOpen = new MenuItem("Open");
+            MenuItem menuItemRename = new MenuItem("Rename");
+            MenuItem menuItemDelete = new MenuItem("Delete");
+
+            menuItemOpen.setOnAction((ActionEvent actionEvent)->
+            {
+                OpenNote((HBox)mouseEvent.getSource());
+            });
+
+            menuItemRename.setOnAction((ActionEvent actionEvent)->
+            {
+                HBox item = (HBox)mouseEvent.getSource();
+
+                for(int i = 0; i < item.getChildren().size(); i++)
+                {
+                    if(item.getChildren().get(i) instanceof Label)
+                    {
+                        Label itemLabel = (Label)item.getChildren().get(i);
+                        String oldName = itemLabel.getText();
+                        TextInputDialog textInputDialog = new TextInputDialog(oldName);
+
+                        textInputDialog.setTitle("Rename Note");
+                        textInputDialog.setHeaderText("Set new name of note");
+
+                        Optional<String> result = textInputDialog.showAndWait();
+
+                        if(result.isPresent())
+                        {
+                            Rename(oldName, result.get());
+                        }
+
+                        break;
+                    }
+                }
+            });
+
+            menuItemDelete.setOnAction((ActionEvent actionEvent)->
+            {
+                DeleteNote((HBox)mouseEvent.getSource());
+            });
+
+            contextMenu.getItems().addAll(menuItemOpen, menuItemRename, menuItemDelete);
+            fx_list_view_note.setContextMenu(contextMenu);
+        }
+    }
+
+    void AddNoteHBox(String noteName)
+    {
+        HBox hBox = new HBox();
+        Label label = new Label(noteName);
+        Font font = new Font(label.getFont().getName(), 18);
+
+        label.setFont(font);
+        hBox.setOnMouseClicked(this::NoteListItemActionHandler);
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.getChildren().add(label);
+        fx_list_view_note.getItems().add(hBox);
+    }
+
     void AddNote(String noteName)
     {
         Main.fileNames.add(noteName);
+        AddNoteHBox(noteName);
 
-        int size = Main.fileNames.size();
-        Button button = new Button(Main.fileNames.get(size - 1));
-
-        button.setOnAction(this::NoteButtonActionHandler);
-
-        fx_note_list.getChildren().add(button);
-        File newNote = new File("resources/notes/" + noteName + ".pp");
+        File newNote = new File("data/notes/" + noteName + ".pp");
 
         try
         {
+            newNote.getParentFile().mkdirs();
             newNote.createNewFile();
         }
         catch(IOException e)
@@ -88,15 +227,11 @@ public class NoteListController implements Initializable
 
     void RefreshList()
     {
-        fx_note_list.getChildren().clear();
+        fx_list_view_note.getItems().clear();
 
         for(int i = 0; i < Main.fileNames.size(); i++)
         {
-            Button button = new Button(Main.fileNames.get(i));
-
-            button.setOnAction(this::NoteButtonActionHandler);
-
-            fx_note_list.getChildren().add(button);
+            AddNoteHBox(Main.fileNames.get(i));
         }
     }
 
@@ -104,7 +239,7 @@ public class NoteListController implements Initializable
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         Main.fileNames = new ArrayList<>();
-        File filesList = new File("resources/files.list");
+        File filesList = new File("data/files.list");
         Scanner filesListScanner = null;
 
         try
@@ -133,7 +268,8 @@ public class NoteListController implements Initializable
 
         RefreshList();
 
-        fx_new_note_name.textProperty().addListener((ObservableValue<? extends String> observableValue, String s, String t1) ->
+        fx_new_note_name.textProperty().addListener((ObservableValue<? extends String> observableValue,
+                                                     String s, String t1) ->
         {
             if(t1.length() > NEW_NOTE_NAME_MAX_CHAR)
             {

@@ -50,7 +50,7 @@ public class NoteViewController implements Initializable
 
         try
         {
-            noteOutputStream = new FileOutputStream("resources/notes/" + Main.currentNote + ".pp");
+            noteOutputStream = new FileOutputStream("data/notes/" + Main.currentNote + ".pp");
         }
         catch(FileNotFoundException e)
         {
@@ -61,7 +61,8 @@ public class NoteViewController implements Initializable
         {
             try
             {
-                noteOutputStream.write(fx_text_area_note.getText().getBytes(), 0, fx_text_area_note.getText().length());
+                noteOutputStream.write(fx_text_area_note.getText().getBytes(), 0,
+                        fx_text_area_note.getText().length());
                 noteOutputStream.close();
             }
             catch(IOException e)
@@ -84,7 +85,7 @@ public class NoteViewController implements Initializable
 
         try
         {
-            noteInputStream = new FileInputStream("resources/notes/" + Main.currentNote + ".pp");
+            noteInputStream = new FileInputStream("data/notes/" + Main.currentNote + ".pp");
         }
         catch(FileNotFoundException e)
         {
@@ -146,7 +147,8 @@ public class NoteViewController implements Initializable
             }
         }
 
-        fx_text_area_note.textProperty().addListener((ObservableValue<? extends String> observableValue, String oldValue, String newValue) ->
+        fx_text_area_note.textProperty().addListener((ObservableValue<? extends String> observableValue,
+                                                      String oldValue, String newValue) ->
         {
             if(!oldValue.equals(newValue))
             {
