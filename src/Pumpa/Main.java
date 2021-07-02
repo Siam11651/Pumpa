@@ -11,7 +11,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +25,8 @@ public class Main extends Application
     public static FXMLLoader noteViewFXML;
     public static Parent noteList, noteView;
     public static RootName rootName;
+    public static String fontName;
+    public static int fontSize;
     Image icon;
 
     void WindowCloseEvent(WindowEvent windowEvent)
@@ -75,25 +79,63 @@ public class Main extends Application
             }
         }
 
+        FileWriter fileListWriter = null;
+
         try
         {
-            FileWriter fileListWriter = new FileWriter("data/files.list");
-
-            for(int i = 0; i < fileNames.size(); i++)
-            {
-                fileListWriter.append(fileNames.get(i));
-
-                if(i < fileNames.size() - 1)
-                {
-                    fileListWriter.append("\n");
-                }
-            }
-
-            fileListWriter.close();
+            fileListWriter = new FileWriter("data/files.list");
         }
         catch(IOException e)
         {
             e.printStackTrace();
+        }
+
+        if(fileListWriter != null)
+        {
+            try
+            {
+                for(int i = 0; i < fileNames.size(); i++)
+                {
+                    fileListWriter.append(fileNames.get(i));
+
+                    if(i < fileNames.size() - 1)
+                    {
+                        fileListWriter.append("\n");
+                    }
+                }
+
+                fileListWriter.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        FileOutputStream settingsFileOutputStream = null;
+
+        try
+        {
+            settingsFileOutputStream = new FileOutputStream("data/settings.dat");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(settingsFileOutputStream != null)
+        {
+            try
+            {
+                settingsFileOutputStream.write(ByteBuffer.allocate(Integer.SIZE / 8).putInt(fontName.length()).array());
+                settingsFileOutputStream.write(fontName.getBytes());
+                settingsFileOutputStream.write(ByteBuffer.allocate(Integer.SIZE / 8).putInt(fontSize).array());
+                settingsFileOutputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -111,6 +153,52 @@ public class Main extends Application
         {
             filesList.getParentFile().mkdirs();
             filesList.createNewFile();
+        }
+
+        File settingsFile = new File("data/settings.dat");
+
+        if(settingsFile.exists())
+        {
+            FileInputStream settingsInputStream = null;
+
+            try
+            {
+                settingsInputStream = new FileInputStream(settingsFile);
+            }
+            catch(FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+
+            if(settingsInputStream != null)
+            {
+                byte[] fontNameSizeBytes = new byte[Integer.SIZE / 8];
+
+                settingsInputStream.read(fontNameSizeBytes, 0, Integer.SIZE / 8);
+
+                int fontNameSize = ByteBuffer.wrap(fontNameSizeBytes).getInt();
+                byte[] fontNameBytes = new byte[fontNameSize];
+
+                settingsInputStream.read(fontNameBytes, 0, fontNameSize);
+
+                fontName = new String(fontNameBytes);
+
+                byte[] fontSizeBytes = new byte[Integer.SIZE / 8];
+
+                settingsInputStream.read(fontSizeBytes, 0, Integer.SIZE / 8);
+
+                fontSize = ByteBuffer.wrap(fontSizeBytes).getInt();
+
+                settingsInputStream.close();
+            }
+        }
+        else
+        {
+            settingsFile.getParentFile().mkdirs();
+            settingsFile.createNewFile();
+
+            fontName = "System";
+            fontSize = 18;
         }
 
         rootName = RootName.NOTE_LIST;

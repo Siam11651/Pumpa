@@ -10,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 
 import java.io.*;
 import java.net.URL;
@@ -117,6 +118,7 @@ public class NoteViewController implements Initializable
         saved = true;
 
         fx_button_save_note.setVisible(false);
+        fx_text_area_note.setFont(new Font(Main.fontName, Main.fontSize));
     }
 
     @Override

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pumpa.SettingsController">
+   <children>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab closable="false" text="Font">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <ChoiceBox fx:id="fx_choice_box_font_name" prefWidth="150.0" AnchorPane.leftAnchor="69.0" AnchorPane.topAnchor="10.0" />
+                        <Label text="Size:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="45.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="fx_choice_box_font_size" AnchorPane.leftAnchor="69.0" AnchorPane.topAnchor="45.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="fx_button_settings_apply" minWidth="55.0" mnemonicParsing="false" onAction="#Action_settings_apply" text="Apply" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Button fx:id="fx_button_settings_cancel" minWidth="55.0" mnemonicParsing="false" onAction="#Action_settings_cancel" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="75.0" />
+      <Button fx:id="fx_settings_ok" minWidth="55.0" mnemonicParsing="false" onAction="#Action_settings_ok" text="OK" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="140.0" />
+   </children>
+</AnchorPane>

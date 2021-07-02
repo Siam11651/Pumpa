@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Pumpa:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pumpa_jar</output-path>
+    <root id="archive" name="Pumpa.jar">
+      <element id="module-output" name="Pumpa" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$JAVAFX_HOME$/lib/javafx.graphics.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

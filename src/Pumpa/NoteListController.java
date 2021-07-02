@@ -3,8 +3,11 @@ package Pumpa;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,17 +15,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 public class NoteListController implements Initializable
 {
@@ -30,13 +32,13 @@ public class NoteListController implements Initializable
     Image icon;
 
     @FXML
-    ImageView fx_image_view_add;
+    ImageView fx_image_view_add, fx_image_view_settings;
 
     @FXML
     private TextField fx_new_note_name;
 
     @FXML
-    private Button fx_add_button;
+    private Button fx_add_button, fx_button_settings;
 
     @FXML
     ListView<HBox> fx_list_view_note;
@@ -307,6 +309,30 @@ public class NoteListController implements Initializable
             }
         }
 
+        try
+        {
+            imageInputStream = new FileInputStream("resources/icons/settings_16x16.png");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(imageInputStream != null)
+        {
+            Image imageFile = new Image(imageInputStream);
+            fx_image_view_settings.setImage(imageFile);
+
+            try
+            {
+                imageInputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         Main.fileNames = new ArrayList<>();
         File filesList = new File("data/files.list");
         Scanner filesListScanner = null;
@@ -348,5 +374,24 @@ public class NoteListController implements Initializable
 
         fx_new_note_name.setTooltip(new Tooltip("Set new note name"));
         fx_add_button.setTooltip(new Tooltip("Add new note"));
+        fx_button_settings.setTooltip(new Tooltip("Settings"));
+    }
+
+    public void Action_settings(ActionEvent actionEvent) throws IOException
+    {
+        FXMLLoader settingsFXMLLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("Settings.fxml")));
+        Parent settingsParent = settingsFXMLLoader.load();
+        SettingsController settingsController = settingsFXMLLoader.getController();
+
+        Stage settingsStage = new Stage();
+
+        settingsStage.initModality(Modality.APPLICATION_MODAL);
+        settingsStage.setResizable(false);
+        settingsStage.setTitle("Settings");
+        settingsStage.getIcons().add(icon);
+        settingsStage.setScene(new Scene(settingsParent));
+        settingsStage.setMinHeight(300);
+        settingsStage.setMinWidth(200);
+        settingsStage.show();
     }
 }
