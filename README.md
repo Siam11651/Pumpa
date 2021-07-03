@@ -1,5 +1,5 @@
 # Pumpa
- ### A simple short notes taking app made with JavaFX
+ ### Pumpa is a simple short notes keeping app built with JavaFX
 
  ![Pumpa Main Window](Screenshots/MainWindow.png)
 
