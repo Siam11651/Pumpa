@@ -30,6 +30,7 @@ public class NoteListController implements Initializable
 {
     final int NEW_NOTE_NAME_MAX_CHAR = 30;
     Image icon;
+    boolean selected;
 
     @FXML
     ImageView fx_image_view_add, fx_image_view_settings;
@@ -85,6 +86,30 @@ public class NoteListController implements Initializable
         Main.master.getScene().setRoot(Main.noteView);
     }
 
+    void Select()
+    {
+        selected = true;
+
+        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        {
+            HBox item = fx_list_view_note.getItems().get(i);
+
+            item.getChildren().add(0, new CheckBox());
+        }
+    }
+
+    void Deselect()
+    {
+        selected = false;
+
+        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        {
+            HBox item = fx_list_view_note.getItems().get(i);
+
+            item.getChildren().remove(0, 1);
+        }
+    }
+
     void Rename(String oldName, String newName)
     {
         if(!newName.equals(oldName))
@@ -128,7 +153,7 @@ public class NoteListController implements Initializable
             {
                 String noteName = "";
 
-                for(int j = 0; j < item.getChildren().size(); )
+                for(int j = 0; j < item.getChildren().size(); j++)
                 {
                     if(item.getChildren().get(j) instanceof Label)
                     {
@@ -142,8 +167,34 @@ public class NoteListController implements Initializable
 
                 noteFile.delete();
                 fx_list_view_note.getItems().remove(i, i + 1);
+                Main.fileNames.remove(i);
 
                 break;
+            }
+        }
+    }
+
+    void DeleteMultipleNotes()
+    {
+        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        {
+            HBox item = fx_list_view_note.getItems().get(i);
+
+            for(int j = 0; j < item.getChildren().size(); j++)
+            {
+                if(item.getChildren().get(j) instanceof CheckBox)
+                {
+                    CheckBox checkBox = (CheckBox) item.getChildren().get(j);
+
+                    if(checkBox.isSelected())
+                    {
+                        DeleteNote(item);
+
+                        i--;
+                    }
+
+                    break;
+                }
             }
         }
     }
@@ -157,13 +208,27 @@ public class NoteListController implements Initializable
         else if(mouseEvent.getButton() == MouseButton.SECONDARY)
         {
             ContextMenu contextMenu = new ContextMenu();
+
             MenuItem menuItemOpen = new MenuItem("Open");
+            MenuItem menuItemSelect = new MenuItem((selected) ? "Deselect" : "Select");
             MenuItem menuItemRename = new MenuItem("Rename");
             MenuItem menuItemDelete = new MenuItem("Delete");
 
             menuItemOpen.setOnAction((ActionEvent actionEvent)->
             {
                 OpenNote((HBox)mouseEvent.getSource());
+            });
+
+            menuItemSelect.setOnAction((ActionEvent actionEvent)->
+            {
+                if(selected)
+                {
+                    Deselect();
+                }
+                else
+                {
+                    Select();
+                }
             });
 
             menuItemRename.setOnAction((ActionEvent actionEvent)->
@@ -198,19 +263,36 @@ public class NoteListController implements Initializable
             {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.YES, ButtonType.NO);
 
-                alert.setTitle("Delete Note");
-                alert.setHeaderText("Are you sure you want to delete the note?");
+                if(selected)
+                {
+                    alert.setTitle("Delete Selected Notes");
+                    alert.setHeaderText("Are you sure you want to delete the notes?");
+                }
+                else
+                {
+                    alert.setTitle("Delete Note");
+                    alert.setHeaderText("Are you sure you want to delete the note?");
+                }
+
                 ((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(icon);
 
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if(result.isPresent() && result.get() == ButtonType.YES)
                 {
-                    DeleteNote((HBox)mouseEvent.getSource());
+                    if(selected)
+                    {
+                        DeleteMultipleNotes();
+                    }
+                    else
+                    {
+                        DeleteNote((HBox)mouseEvent.getSource());
+                    }
                 }
             });
 
-            contextMenu.getItems().addAll(menuItemOpen, menuItemRename, menuItemDelete);
+            contextMenu.getItems().addAll(menuItemOpen, menuItemSelect, menuItemRename, menuItemDelete);
+
             fx_list_view_note.setContextMenu(contextMenu);
         }
     }
@@ -260,6 +342,7 @@ public class NoteListController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        selected = false;
         FileInputStream imageInputStream = null;
 
         try
