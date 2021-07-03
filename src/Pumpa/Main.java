@@ -13,12 +13,12 @@ import javafx.stage.WindowEvent;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
 public class Main extends Application
 {
+    public static final String VERSION = "1.0";
     public static ArrayList<String> fileNames;
     public static String currentNote;
     public static Stage master;
@@ -27,7 +27,7 @@ public class Main extends Application
     public static RootName rootName;
     public static String fontName;
     public static int fontSize;
-    Image icon;
+    public static Image icon;
 
     void WindowCloseEvent(WindowEvent windowEvent)
     {

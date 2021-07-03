@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,13 +34,13 @@ public class NoteListController implements Initializable
     boolean selected;
 
     @FXML
-    ImageView fx_image_view_add, fx_image_view_settings;
+    ImageView fx_image_view_add, fx_image_view_settings, fx_image_view_info;
 
     @FXML
     private TextField fx_new_note_name;
 
     @FXML
-    private Button fx_add_button, fx_button_settings;
+    private Button fx_add_button, fx_button_settings, fx_button_info;
 
     @FXML
     ListView<HBox> fx_list_view_note;
@@ -84,29 +85,36 @@ public class NoteListController implements Initializable
 
         ((NoteViewController)Main.noteViewFXML.getController()).Init();
         Main.master.getScene().setRoot(Main.noteView);
+        Deselect();
     }
 
     void Select()
     {
-        selected = true;
-
-        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        if(!selected)
         {
-            HBox item = fx_list_view_note.getItems().get(i);
+            selected = true;
 
-            item.getChildren().add(0, new CheckBox());
+            for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+            {
+                HBox item = fx_list_view_note.getItems().get(i);
+
+                item.getChildren().add(0, new CheckBox());
+            }
         }
     }
 
     void Deselect()
     {
-        selected = false;
-
-        for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+        if(selected)
         {
-            HBox item = fx_list_view_note.getItems().get(i);
+            selected = false;
 
-            item.getChildren().remove(0, 1);
+            for(int i = 0; i < fx_list_view_note.getItems().size(); i++)
+            {
+                HBox item = fx_list_view_note.getItems().get(i);
+
+                item.getChildren().remove(0, 1);
+            }
         }
     }
 
@@ -197,6 +205,8 @@ public class NoteListController implements Initializable
                 }
             }
         }
+
+        Deselect();
     }
 
     void NoteListItemActionHandler(MouseEvent mouseEvent)
@@ -245,7 +255,7 @@ public class NoteListController implements Initializable
 
                         textInputDialog.setTitle("Rename Note");
                         textInputDialog.setHeaderText("Set new name of note");
-                        ((Stage)textInputDialog.getDialogPane().getScene().getWindow()).getIcons().add(icon);
+                        ((Stage)textInputDialog.getDialogPane().getScene().getWindow()).getIcons().add(Main.icon);
 
                         Optional<String> result = textInputDialog.showAndWait();
 
@@ -266,7 +276,7 @@ public class NoteListController implements Initializable
                 if(selected)
                 {
                     alert.setTitle("Delete Selected Notes");
-                    alert.setHeaderText("Are you sure you want to delete the notes?");
+                    alert.setHeaderText("Are you sure you want to delete the selected notes?");
                 }
                 else
                 {
@@ -274,7 +284,7 @@ public class NoteListController implements Initializable
                     alert.setHeaderText("Are you sure you want to delete the note?");
                 }
 
-                ((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(icon);
+                ((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(Main.icon);
 
                 Optional<ButtonType> result = alert.showAndWait();
 
@@ -331,6 +341,8 @@ public class NoteListController implements Initializable
 
     void RefreshList()
     {
+        selected = false;
+
         fx_list_view_note.getItems().clear();
 
         for(int i = 0; i < Main.fileNames.size(); i++)
@@ -416,6 +428,30 @@ public class NoteListController implements Initializable
             }
         }
 
+        try
+        {
+            imageInputStream = new FileInputStream("resources/icons/info_16x16.png");
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        if(imageInputStream != null)
+        {
+            Image imageFile = new Image(imageInputStream);
+            fx_image_view_info.setImage(imageFile);
+
+            try
+            {
+                imageInputStream.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         Main.fileNames = new ArrayList<>();
         File filesList = new File("data/files.list");
         Scanner filesListScanner = null;
@@ -464,17 +500,29 @@ public class NoteListController implements Initializable
     {
         FXMLLoader settingsFXMLLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("Settings.fxml")));
         Parent settingsParent = settingsFXMLLoader.load();
-        SettingsController settingsController = settingsFXMLLoader.getController();
 
         Stage settingsStage = new Stage();
 
         settingsStage.initModality(Modality.APPLICATION_MODAL);
         settingsStage.setResizable(false);
         settingsStage.setTitle("Settings");
-        settingsStage.getIcons().add(icon);
+        settingsStage.getIcons().add(Main.icon);
         settingsStage.setScene(new Scene(settingsParent));
-        settingsStage.setMinHeight(300);
-        settingsStage.setMinWidth(200);
         settingsStage.show();
+    }
+
+    public void Action_info(ActionEvent actionEvent) throws IOException
+    {
+        FXMLLoader infoFXMLLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("Info.fxml")));
+        Parent infoParent = infoFXMLLoader.load();
+
+        Stage infoStage = new Stage();
+
+        infoStage.initModality(Modality.APPLICATION_MODAL);
+        infoStage.setResizable(false);
+        infoStage.setTitle("Info");
+        infoStage.getIcons().add(Main.icon);
+        infoStage.setScene(new Scene(infoParent));
+        infoStage.show();
     }
 }
