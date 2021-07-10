@@ -1,5 +1,8 @@
 package Pumpa;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -28,6 +33,26 @@ public class Main extends Application
     public static String fontName;
     public static int fontSize;
     public static Image icon;
+
+    public static void LiftUpRoot()
+    {
+        AnchorPane anchorPane = (AnchorPane) master.getScene().getRoot();
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), anchorPane.getChildren().get(0));
+
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.setInterpolator(Interpolator.EASE_IN);
+
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(300), anchorPane.getChildren().get(0));
+
+        translateTransition.setFromY(10);
+        translateTransition.setToY(0);
+        translateTransition.setCycleCount(1);
+        translateTransition.setInterpolator(Interpolator.EASE_IN);
+        fadeTransition.play();
+        translateTransition.play();
+    }
 
     void WindowCloseEvent(WindowEvent windowEvent)
     {

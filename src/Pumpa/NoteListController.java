@@ -214,6 +214,7 @@ public class NoteListController implements Initializable
         if(mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() >= 2)
         {
             OpenNote((HBox)mouseEvent.getSource());
+            Main.LiftUpRoot();
         }
         else if(mouseEvent.getButton() == MouseButton.SECONDARY)
         {

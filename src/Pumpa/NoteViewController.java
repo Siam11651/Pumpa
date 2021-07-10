@@ -78,6 +78,7 @@ public class NoteViewController implements Initializable
     {
         Main.currentNote = "";
         Main.master.getScene().setRoot(Main.noteList);
+        Main.LiftUpRoot();
         Main.rootName = RootName.NOTE_LIST;
     }
 

@@ -6,26 +6,47 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pumpa.NoteListController">
+
+<AnchorPane minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pumpa.NoteListController">
    <children>
-      <HBox spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="640.0" prefHeight="480.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="fx_new_note_name" onAction="#Action_add" promptText="New Note Name..." />
-            <Button fx:id="fx_add_button" mnemonicParsing="false" onAction="#Action_add">
-               <font>
-                  <Font />
-               </font>
-               <graphic>
-                  <ImageView fx:id="fx_image_view_add" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/icons/add_24x24.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </padding></Button>
-            <Button fx:id="fx_button_settings" mnemonicParsing="false" onAction="#Action_settings">
+            <HBox spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <TextField fx:id="fx_new_note_name" onAction="#Action_add" promptText="New Note Name..." />
+                  <Button fx:id="fx_add_button" mnemonicParsing="false" onAction="#Action_add">
+                     <font>
+                        <Font />
+                     </font>
+                     <graphic>
+                        <ImageView fx:id="fx_image_view_add" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/icons/add_24x24.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </padding>
+                  </Button>
+                  <Button fx:id="fx_button_settings" mnemonicParsing="false" onAction="#Action_settings">
+                     <font>
+                        <Font />
+                     </font>
+                     <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </padding>
+                     <graphic>
+                        <ImageView fx:id="fx_image_view_settings" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/icons/settings_16x16.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <Button fx:id="fx_button_info" mnemonicParsing="false" onAction="#Action_info" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font />
                </font>
@@ -33,30 +54,15 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
                <graphic>
-                  <ImageView fx:id="fx_image_view_settings" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="fx_image_view_info" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../resources/icons/settings_16x16.png" />
+                        <Image url="@../../resources/icons/info_16x16.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
+            <ListView fx:id="fx_list_view_note" fixedCellSize="30.0" layoutX="14.0" layoutY="51.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
          </children>
-      </HBox>
-      <Button fx:id="fx_button_info" mnemonicParsing="false" onAction="#Action_info" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <font>
-            <Font />
-         </font>
-         <padding>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </padding>
-         <graphic>
-            <ImageView fx:id="fx_image_view_info" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../resources/icons/info_16x16.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <ListView fx:id="fx_list_view_note" fixedCellSize="30.0" layoutX="14.0" layoutY="51.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
+      </AnchorPane>
    </children>
 </AnchorPane>
